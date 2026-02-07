@@ -1,0 +1,3 @@
+#pragma once
+#define GMAT_TOPLEVEL_PATH "@GMAT_TOPLEVEL_PATH@"
+#define TOPLEVEL_PATH "@CMAKE_SOURCE_DIR@"
