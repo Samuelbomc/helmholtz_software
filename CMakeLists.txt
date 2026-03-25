@@ -87,4 +87,4 @@ target_include_directories(Simulation PRIVATE "${CMAKE_BINARY_DIR}")
 
 target_link_libraries(Simulation PRIVATE GMATRunner GMATScripter ArduinoConfig PWRSRCConfig)
 target_link_libraries(main PRIVATE Visualization)
-target_link_libraries(Visualization PRIVATE )
+target_link_libraries(Visualization PRIVATE Simulation)
