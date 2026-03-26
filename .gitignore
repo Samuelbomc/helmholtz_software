@@ -364,4 +364,4 @@ FodyWeavers.xsd
 
 build/
 
-data/
+data/gmat*

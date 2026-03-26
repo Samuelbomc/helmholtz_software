@@ -1,4 +1,7 @@
 #pragma once
+
+#pragma once
+
 #include <map>
 #include <utility>
 #include <string>
@@ -6,7 +9,7 @@
 class GMATScripter {
 public:
 
-	void setObjectName(std::string& ObjectName);
+    void setObjectName(const std::string& ObjectName);
 
 	// Orbital Elements
 	void setSMA(float SMA);
@@ -31,6 +34,26 @@ public:
 	// Force Model Settings
 	void setRelativisticCorrection(const std::string& value);
 	void setAtmosphereModel(const std::string& model);
+	void setSRP(const std::string& value);
+	void setPrimaryBodies(const std::string& value);
+	void setPointMasses(const std::string& value);
+	void setEarthGravityDegree(int value);
+	void setEarthGravityOrder(int value);
+	void setDragModel(const std::string& value);
+
+	// Propagator Settings
+	void setPropagatorType(const std::string& type);
+	void setInitialStepSize(double value);
+	void setPropagationAccuracy(double value);
+	void setMinStep(double value);
+	void setMaxStep(double value);
+	void setMaxStepAttempts(int value);
+	void setStopIfAccuracyIsViolated(bool value);
+
+	// Frame/Format Settings
+	void setDateFormat(const std::string& value);
+	void setCoordinateSystem(const std::string& value);
+	void setReportPrecision(int value);
 
 	// File Paths
 	void setDataPath(const std::string& path);
