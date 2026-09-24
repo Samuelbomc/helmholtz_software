@@ -1,7 +1,6 @@
 ## Software
 ### Miembros
-- [ ] Luyfer Gabriel Torres
-- [ ] Samuel Bedoya
+- Samuel Bedoya
 ### Tareas
 - [ ] Finalizar port a C++
 - [ ] Diseñar la interfaz de usuario utilizando librerías externas
@@ -11,8 +10,7 @@
 
 ## Hardware
 ### Miembros
-- [ ] Sofia Cardona
-- [ ] Luciana Solano
+- Luciana Solano
 ### Tareas
 - [ ] Diseño del Air Bearing
 - [ ] Fabricación del Air Bearing
@@ -21,7 +19,6 @@
 
 ## CubeSat
 ### Miembros
-- [ ] Andrés Felipe Merchán
 ### Tareas
 - [ ] Lograr energizar el CubeSat
 - [ ] Utilizar la Comunicación Serial para enviar datos desde el CubeSat a la computadora
