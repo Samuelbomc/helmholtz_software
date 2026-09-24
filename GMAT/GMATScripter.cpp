@@ -16,11 +16,6 @@ const std::string& requireConfigValue(const std::map<std::string, std::string>& 
     return it->second;
 }
 
-std::string getConfigValueOrDefault(const std::map<std::string, std::string>& config, const char* key, const char* defaultValue) {
-    const auto it = config.find(key);
-    return it == config.end() ? std::string(defaultValue) : it->second;
-}
-
 std::string joinPath(const std::string& dir, const std::string& file) {
     if (dir.empty()) {
         return file;
@@ -64,19 +59,9 @@ void trimTrailingCarriageReturn(std::string& value) {
         value.pop_back();
     }
 }
-
-template <typename T>
-void setNumericConfigValue(std::map<std::string, std::string>& config, const char* key, T value) {
-    static_assert(std::is_arithmetic<T>::value, "setNumericConfigValue requires arithmetic type");
-    config[key] = std::to_string(value);
 }
 
-void setBoolConfigValue(std::map<std::string, std::string>& config, const char* key, bool value) {
-    config[key] = value ? "true" : "false";
-}
-}
-
-void GMATScripter::createScript() {
+void GMATScripter::createScript(const std::string& outputPath, const std::string& scriptName) {
     const auto& p = config;
     const std::string& objectName = requireConfigValue(p, "ObjectName");
     const std::string& epoch = requireConfigValue(p, "Epoch");
@@ -93,9 +78,7 @@ void GMATScripter::createScript() {
     const std::string& srpArea = requireConfigValue(p, "SRPArea");
     const std::string& relativisticCorrection = requireConfigValue(p, "RelativisticCorrection");
     const std::string& atmosphereModel = requireConfigValue(p, "AtmosphereModel");
-    const std::string& dataPath = requireConfigValue(p, "GMAT_data_path");
     const std::string& reportName = requireConfigValue(p, "report_name");
-    const std::string& scriptName = requireConfigValue(p, "script_name");
 
     const std::string& dateFormat = requireConfigValue(p, "DateFormat");
     const std::string& coordinateSystem = requireConfigValue(p, "CoordinateSystem");
@@ -293,7 +276,7 @@ GMAT DefaultProp.MaxStepAttempts = )" << maxStepAttempts << R"(;
 GMAT DefaultProp.StopIfAccuracyIsViolated = )" << stopIfAccuracyIsViolated << R"(;
 )";
 
-    const std::string report_full_path = joinPath(dataPath, reportName);
+    const std::string report_full_path = joinPath(outputPath, reportName);
 
     script << R"(
 %----------------------------------------
@@ -328,155 +311,26 @@ For i = 1:)" << num_steps << R"(
 EndFor;
 )";
 
-    const std::string script_file_path = joinPath(dataPath, scriptName);
+    const std::string script_file_path = joinPath(outputPath, scriptName);
 
     std::ofstream out(script_file_path);
     if (!out) {
         throw std::runtime_error("Failed to open file for writing: " + script_file_path);
     }
     out << script.str();
+    scriptPath = script_file_path;
 }
 
-void GMATScripter::setObjectName(const std::string& ObjectName) {
-    config["ObjectName"] = ObjectName;
+void GMATScripter::setConfig(const std::map<std::string, std::string>& values) {
+    config = values;
 }
 
-// Orbital Elements
-void GMATScripter::setSMA(float SMA) {
-    setNumericConfigValue(config, "SMA", SMA);
-}
-void GMATScripter::setECC(double ECC) {
-    setNumericConfigValue(config, "ECC", ECC);
-}
-void GMATScripter::setINC(double INC) {
-    setNumericConfigValue(config, "INC", INC);
-}
-void GMATScripter::setRAAN(double RAAN) {
-    setNumericConfigValue(config, "RAAN", RAAN);
-}
-void GMATScripter::setAOP(double AOP) {
-    setNumericConfigValue(config, "AOP", AOP);
-}
-void GMATScripter::setTA(double TA) {
-    setNumericConfigValue(config, "TA", TA);
-}
-
-// Physical Properties
-void GMATScripter::setDryMass(int DryMass) {
-    setNumericConfigValue(config, "DryMass", DryMass);
-}
-void GMATScripter::setCd(double Cd) {
-    setNumericConfigValue(config, "Cd", Cd);
-}
-void GMATScripter::setCr(double Cr) {
-    setNumericConfigValue(config, "Cr", Cr);
-}
-void GMATScripter::setDragArea(double DragArea) {
-    setNumericConfigValue(config, "DragArea", DragArea);
-}
-void GMATScripter::setSRPArea(double SRPArea) {
-    setNumericConfigValue(config, "SRPArea", SRPArea);
-}
-
-// Simulation Settings
-void GMATScripter::setSimulationDurationSec(int duration) {
-    setNumericConfigValue(config, "simulation_duration_sec", duration);
-}
-void GMATScripter::setSimulationStepSec(int step) {
-    setNumericConfigValue(config, "simulation_step_sec", step);
-}
-void GMATScripter::setEpoch(const std::string& Epoch) {
-    config["Epoch"] = Epoch;
-}
-
-// Force Model Settings
-void GMATScripter::setRelativisticCorrection(const std::string& value) {
-    config["RelativisticCorrection"] = value;
-}
-void GMATScripter::setAtmosphereModel(const std::string& model) {
-    config["AtmosphereModel"] = model;
-}
-void GMATScripter::setSRP(const std::string& value) {
-    config["SRP"] = value;
-}
-void GMATScripter::setPrimaryBodies(const std::string& value) {
-    config["PrimaryBodies"] = value;
-}
-void GMATScripter::setPointMasses(const std::string& value) {
-    config["PointMasses"] = value;
-}
-void GMATScripter::setEarthGravityDegree(int value) {
-    setNumericConfigValue(config, "EarthGravityDegree", value);
-}
-void GMATScripter::setEarthGravityOrder(int value) {
-    setNumericConfigValue(config, "EarthGravityOrder", value);
-}
-void GMATScripter::setDragModel(const std::string& value) {
-    config["DragModel"] = value;
-}
-
-// Propagator Settings
-void GMATScripter::setPropagatorType(const std::string& type) {
-    config["PropagatorType"] = type;
-}
-void GMATScripter::setInitialStepSize(double value) {
-    setNumericConfigValue(config, "InitialStepSize", value);
-}
-void GMATScripter::setPropagationAccuracy(double value) {
-    setNumericConfigValue(config, "Accuracy", value);
-}
-void GMATScripter::setMinStep(double value) {
-    setNumericConfigValue(config, "MinStep", value);
-}
-void GMATScripter::setMaxStep(double value) {
-    setNumericConfigValue(config, "MaxStep", value);
-}
-void GMATScripter::setMaxStepAttempts(int value) {
-    setNumericConfigValue(config, "MaxStepAttempts", value);
-}
-void GMATScripter::setStopIfAccuracyIsViolated(bool value) {
-    setBoolConfigValue(config, "StopIfAccuracyIsViolated", value);
-}
-
-// Frame/Format Settings
-void GMATScripter::setDateFormat(const std::string& value) {
-    config["DateFormat"] = value;
-}
-void GMATScripter::setCoordinateSystem(const std::string& value) {
-    config["CoordinateSystem"] = value;
-}
-void GMATScripter::setReportPrecision(int value) {
-    setNumericConfigValue(config, "ReportPrecision", value);
-}
-
-// File Paths
-void GMATScripter::setDataPath(const std::string& path) {
-    config["GMAT_data_path"] = path;
-}
-void GMATScripter::setReportName(const std::string& name) {
-    config["report_name"] = name;
-}
-void GMATScripter::setScriptName(const std::string& name) {
-    config["script_name"] = name;
-}
-
-void GMATScripter::saveConfigToFile(const std::string& filename) {
-    const std::string path = joinPath(std::string(TOPLEVEL_PATH) + "/data", filename + "_GMAT");
-    std::ofstream out(path);
-    if (!out) {
-        throw std::runtime_error("Failed to open file for writing: " + filename);
-    }
-    for (const auto& [key, value] : config) {
-        out << key << "=" << value << "\n";
-    }
-}
-
-void GMATScripter::loadConfigFromFile(const std::string& filename) {
-    const std::string path = joinPath(std::string(TOPLEVEL_PATH) + "/data", filename + "_GMAT");
+void GMATScripter::loadConfigFromPath(const std::string& path) {
     std::ifstream in(path);
     if (!in) {
-        throw std::runtime_error("Failed to open file for reading: " + filename);
+        throw std::runtime_error("Failed to open file for reading: " + path);
     }
+
     config.clear();
     std::string line;
     while (std::getline(in, line)) {
@@ -495,6 +349,25 @@ void GMATScripter::loadConfigFromFile(const std::string& filename) {
     }
 }
 
+void GMATScripter::saveConfigToFile(const std::string& filename) {
+    const std::string path = joinPath(std::string(TOPLEVEL_PATH) + "/data", filename + "_GMAT");
+    std::ofstream out(path);
+    if (!out) {
+        throw std::runtime_error("Failed to open file for writing: " + filename);
+    }
+    for (const auto& [key, value] : config) {
+        out << key << "=" << value << "\n";
+    }
+}
+
+void GMATScripter::loadConfigFromFile(const std::string& filename) {
+    const std::string path = joinPath(std::string(TOPLEVEL_PATH) + "/data", filename + "_GMAT");
+    loadConfigFromPath(path);
+}
+
 std::string GMATScripter::getScriptPath() const {
-    return joinPath(config.at("GMAT_data_path"), config.at("script_name"));
+    if (scriptPath.empty()) {
+        throw std::runtime_error("Script path is not available. Call createScript() first.");
+    }
+    return scriptPath;
 }

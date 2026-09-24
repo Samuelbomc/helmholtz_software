@@ -1,5 +1,5 @@
 #include "GMATRunner.h"
-#include "GMATConfig.h"
+#include "Config.h"
 
 void GMATRunner::run_script() const{
 

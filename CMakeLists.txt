@@ -39,8 +39,8 @@ list(GET GMAT_EXTRACTED_DIRS 0 GMAT_TOPLEVEL_DIR)
 set(GMAT_TOPLEVEL_PATH "${GMAT_EXTRACT_DIR}/${GMAT_TOPLEVEL_DIR}")
 
 configure_file(
-    "${CMAKE_SOURCE_DIR}/GMATConfig.h.in"
-    "${CMAKE_BINARY_DIR}/GMATConfig.h"
+    "${CMAKE_SOURCE_DIR}/Config.h.in"
+    "${CMAKE_BINARY_DIR}/Config.h"
     @ONLY
 )
 
