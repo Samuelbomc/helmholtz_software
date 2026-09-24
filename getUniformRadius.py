@@ -54,7 +54,7 @@ def calc_B(pts, eval_pt):
 def B_helmholtz(L, R, D, eval_pt, axis='Z'):
     """Evaluates the sum of two Helmholtz-configured loops for a given axis."""
     pts = generate_loop_points(L, R)
-    pts = np.vstack([pts, pts[0]]) # Cerramos la espira
+    pts = np.vstack([pts, pts[0]])
     
     pts1, pts2 = pts.copy(), pts.copy()
     pts1[:,2] = D/2
