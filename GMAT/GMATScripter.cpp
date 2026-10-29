@@ -1,6 +1,6 @@
 #include "GMATScripter.h"
 #include "GMATScripter.h"
-#include "GMATConfig.h"
+#include "Config.h"
 #include <sstream>
 #include <fstream>
 #include <stdexcept>
