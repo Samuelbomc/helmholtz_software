@@ -1,5 +1,5 @@
 #include "ArduinoConfig.h"
-#include "GMATConfig.h"
+#include "Config.h"
 #include <fstream>
 
 void ArduinoConfig::set_serial_timeout(double timeout) {
