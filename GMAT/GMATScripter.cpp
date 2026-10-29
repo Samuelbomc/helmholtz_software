@@ -1,5 +1,4 @@
 #include "GMATScripter.h"
-#include "GMATScripter.h"
 #include "Config.h"
 #include <sstream>
 #include <fstream>
