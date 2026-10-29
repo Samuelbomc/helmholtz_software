@@ -1,5 +1,5 @@
 #include "PWRSRCConfig.h"
-#include "GMATConfig.h"
+#include "Config.h"
 #include <fstream>
 #include <stdexcept>
 
