@@ -1,7 +1,7 @@
 #include "Simulation.h"
 #include <fstream>
 #include <stdexcept>
-#include "GMATConfig.h"
+#include "Config.h"
 #include <string>
 
 void Simulation::set_cal_mx(double value) {
