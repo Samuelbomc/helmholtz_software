@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30.5)
 
-project(helmholtz LANGUAGES CXX)
+project(helmholtz LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -12,7 +12,7 @@ set(GMAT_EXTRACT_DIR "${CMAKE_SOURCE_DIR}/data/gmat-extracted")
 # Check if the GMAT archive already exists, if not, download it
 if(NOT EXISTS "${GMAT_ZIP}")
     file(DOWNLOAD "https://sourceforge.net/projects/gmat/files/latest/download"
-         "${GMAT_ZIP}"
+         "${GMAT_ZIP}"  
          STATUS download_status
          LOG download_log
          SHOW_PROGRESS)
@@ -71,12 +71,21 @@ add_library(PWRSRCConfig
 add_library(Simulation
     "Sim/Simulation.cpp"
     "Sim/Simulation.h"
+    "models/pomme.c"
+    "models/geod2geoc.c"
+    "models/gsm2geo.c"
+    "models/sm2geo.c"
+    "models/plmbar.c"
+    "models/magfdz.c"
+    "models/int-ext.c"
 )
 
 add_library(Visualization
     "UI/Visualization.cpp"
     "UI/Visualization.h"
 )
+
+target_compile_definitions(Simulation PRIVATE _USE_MATH_DEFINES)
 
 target_include_directories(main PRIVATE "${CMAKE_BINARY_DIR}")
 target_include_directories(GMATRunner PRIVATE "${CMAKE_BINARY_DIR}")
